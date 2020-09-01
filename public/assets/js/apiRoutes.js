@@ -4,7 +4,7 @@
 // These data sources hold arrays of information on table-data, waitinglist, etc.
 // ===============================================================================
 
-const noteData = require("../../../db/db");
+const db = require("../../../db/db");
 
 
 // ===============================================================================
@@ -22,7 +22,6 @@ module.exports = function(app) {
     res.json(db);
   });
 
-  
   // API POST Requests
   // Below code handles when a user submits a form and thus submits data to the server.
   // In each of the below cases, when a user submits form data (a JSON object)
@@ -30,25 +29,34 @@ module.exports = function(app) {
   // (ex. User fills out a reservation request... this data is then sent to the server...
   // Then the server saves the data to the tableData array)
   // ---------------------------------------------------------------------------
-
+  
   app.post("/api/notes", function(req, res) {
     // Note the code here. Our "server" will respond to requests and let users know if they have a table or not.
     // It will do this by sending out the value "true" have a table
     // req.body is available since we're using the body parsing middleware
-    if (noteData.length < 5) {
-      noteData.push(req.body);
-      res.json(true);
-    }
-   
+    
+    // add the uuid
+    db.push(req.body);
+    res.json(true);
+    // write file
+    // send file to refresh the notes page
+    
   });
-
+  
+  app.delete("/api/notes", function() {
+    //uuid
+    // read the file 
+    res.json(db);
+    // filter for id to delete
+    // write new file 
+  });
   // ---------------------------------------------------------------------------
   // I added this below code so you could clear out the table while working with the functionality.
   // Don"t worry about it!
 
   // app.post("/api/clear", function(req, res) {
   //   // Empty out the arrays of data
-  //   noteData.length = 0;
+  //   db.length = 0;
 
   //   res.json({ ok: true });
   // });
