@@ -22,12 +22,11 @@ module.exports = function(app) {
       }
     });
     console.log(db);
-    console.log(`write the db to a file here`);
+    // console.log(`write the db to a file here`);
     // write the newly modified file
-    // fs.appendFile('../../db/db.json', db, function(err) {
-    //   if(err) return console.log(err);
-    //   console.log('write file failure');
-    // });
+    fs.writeFile('./db/db.json', JSON.stringify(db), function(err) {
+      if(err) return console.log(err);
+    });
   });
 
   // API POST Requests
@@ -37,6 +36,7 @@ module.exports = function(app) {
     // console.log(req.body);
     db.push(req.body);
     res.json(true);
+    console.log(`note added!`);
     console.log(db);
     // write file
     // send file to refresh the notes page
@@ -50,12 +50,13 @@ module.exports = function(app) {
     //uuid
     const noteID = req.params[0];
     console.log(`ID of note to delete: ${noteID}`);
-    const delNote = db.filter(function(notes) {
-      return notes.id === noteID;
+    const delNote = db.filter(function(notes,i) {
+      if(notes.id === noteID) {
+        return db.splice(i,1);
+      };
     });
-    console.log(`filtered object:`);
-    console.log(delNote);
-    console.log('------------------------------------');
+    // console.log(delNote);
+    // console.log('------------------------------------');
     // read the file 
     res.json(db);
     // filter for id to delete
